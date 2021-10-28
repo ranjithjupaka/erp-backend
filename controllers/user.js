@@ -6,7 +6,15 @@ const dotenv = require('dotenv');
 
 exports.userRegister = async (userDets, res) => {
     //console.log(userDets);
-
+    const {employeeId} =  userDets;
+    const user = await User.findOne({ employeeId });
+    // console.log(userCreds);
+    if (user) {
+      return res.status(404).json({
+        message: "Employee Id already Used. Please try another.",
+        success: false
+      });
+    }
     try {
       const password = await bcrypt.hash(userDets.password, 12);
       const newUser = new User({
@@ -126,7 +134,7 @@ exports.serializeUser = user => {
   };
 
 exports.listUsers = (req, res) => {
-    User.find()
+    User.find({},{password : 0,resetToken:0})
       .sort({ role: 1 })
       .exec((err, users) => {
         if (err) {
@@ -209,15 +217,16 @@ exports.resetPassword =  (req,res) => {
 
 exports.updateUser = (req, res) => {
  
-  const user = req.user ;
+  const user = req.body ;
   console.log(user);
 
- User.updateOne({ _id: user._id }, { $set: req.body }, (error, data) => {
+  User.updateOne({ _id: user._id }, { $set: req.body }, (error, data) => {
    if (error) {
      return res.status(400).json({
        error: 'sorry updating users for this query not sucessful',
      })
    }
+   
    res.status(200).json({ msg: 'success',data:data })
  })
 }

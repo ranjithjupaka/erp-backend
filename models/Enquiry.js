@@ -13,10 +13,13 @@ const EnquirySchema = new mongoose.Schema(
       type: String,
       minlength: 17,
     },
+    priority:{
+      type:String,
+      required:true,
+    },
     client_email: {
       unique: true,
       type: String,
-      minlength: 15,
     },
     client_company: {
       type: String,

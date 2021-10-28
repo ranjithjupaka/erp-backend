@@ -5,7 +5,7 @@ const ItemSchema = new mongoose.Schema(
     item_description: {
       type: String,
       required: true,
-      minlength: 32,
+      minlength: 20,
     },
     model: {
       type: String,
@@ -32,6 +32,10 @@ const ItemSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref:'Sales_detail',
       default:null
+    },
+    admin_statement:{
+      type:String,
+      default:""
     },
     updated: Date,
   },

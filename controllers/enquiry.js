@@ -38,6 +38,8 @@ exports.createSell=(req,res,next)=>{
       selling_discount:0,
       selling_gst:0,
       selling_total:0,
+      status:1, 
+      comment:"NA",
   }
   const sell=new Sales_detail(sellDefault);
   sell.save((error, data) => {
@@ -65,7 +67,7 @@ exports.createSell=(req,res,next)=>{
       gst: 0,
       total: 0,
       availability:"NA",
-      vendor_email:"example@gmail.com",
+      vendor_email:"",
       vendor_name:"NA",
       purchase_quote_date: "",
     }
@@ -124,6 +126,7 @@ exports.createEnquiry = (req, res) => {
       client_name: req.body.client_name,
       client_no: req.body.client_no,
       client_rfqno: req.body.client_rfqno,
+      priority:req.body.priority,
       items:[req.itemId]
   })
   enquiry.save((error, data) => {

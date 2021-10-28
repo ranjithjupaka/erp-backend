@@ -16,11 +16,12 @@ const {
   createItem,
   createPurchase,createSell
 } = require('../controllers/enquiry')
-const {userAuth, checkRole} = require('../controllers/user')
+const {userAuth, checkRole} = require('../controllers/user');
+const { validation} = require('../helpers/enquiryValidation');
 var router = express.Router();
 
 
-router.post('/enquiry/create',userAuth,checkRole(['admin','superadmin','sales','purchase']),createSell,createPurchase,createItem, createEnquiry)
+router.post('/enquiry/create',userAuth,checkRole(['admin','superadmin','sales','purchase']),validation,createSell,createItem, createEnquiry)
 router.post(
   '/enquiry/:enquiryById/additem',
   userAuth,

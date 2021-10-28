@@ -18,7 +18,7 @@ router.post("/profile", async (req,res) => {
   return userLoginWithToken(req.body, res);
 })
 
-router.put('/profile/:userById/updateUser',userAuth,checkRole(['admin','superadmin']), updateUser);
+router.put('/:userById/updateUser',userAuth,checkRole(['admin','superadmin']), updateUser);
 
 router.put("/forgot-password",forgotPassword);
 
@@ -27,6 +27,6 @@ router.put("/reset-password",resetPassword);
 router.get("/users/list",userAuth,checkRole(['admin','superadmin']),listUsers);
 
 
-router.param("userById", userById);
+router.param("userById",userAuth,checkRole(['admin','superadmin']), userById);
 
 module.exports = router;
