@@ -67,7 +67,7 @@ exports.createSell=(req,res,next)=>{
       gst: 0,
       total: 0,
       availability:"NA",
-      vendor_email:"",
+      // vendor_email:"NA",
       vendor_name:"NA",
       purchase_quote_date: "",
     }
@@ -165,8 +165,13 @@ exports.listEnquiries = (req, res) => {
   let order = req.query.order ? parseInt(req.query.order) : 1;
 
    Enquiry.find()
-   .populate('items')
     .sort([[sortBy, order]])
+    .populate({
+      path: "items",
+      populate : {
+        path : 'purchase_refId'
+      }
+     })
     .exec((err, queries) => {
       if (err) {
         console.log(err)
