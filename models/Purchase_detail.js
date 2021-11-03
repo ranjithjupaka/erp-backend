@@ -29,10 +29,18 @@ const PurchaseSchema = new mongoose.Schema(
     },
     vendor_email: {
       type: String,
-      default:"example@gmail.com"
+      default:""
+    },
+    vendor_mode : {
+      type : String,
+      default : "email"
     },
     vendor_name: {
       type: String,
+    },
+    vendor_phone : {
+      type : String,
+      default : ""
     },
     purchase_quote_date: Date,
   },

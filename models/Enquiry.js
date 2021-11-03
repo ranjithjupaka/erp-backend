@@ -39,6 +39,14 @@ const EnquirySchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    sell_person:{
+      type:String,
+      default:""
+    },
+    purchase_person:{
+      type:String,
+      default:""
+    },
     updated: Date,
   },
   { timestamps: true }

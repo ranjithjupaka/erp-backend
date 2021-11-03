@@ -3,6 +3,26 @@ const { Item } = require("../models/Item");
 const { Purchase_detail } = require("../models/Purchase_detail");
 
 
+exports.updatepurchasePerson = (req, res) => {
+ 
+  console.log(req.body);
+  console.log(req.body.queryId);
+  Enquiry.findOneAndUpdate(
+    { _id: req.body.queryId},
+    {
+      $set: {"purchase_person":req.body.person},
+    },
+    (error, data) => {
+      if (error) {
+        return res.status(400).json({
+          error: "sorry updating items for thhis query not sucessful",
+        });
+      }
+      console.log(data);
+      res.status(200).json({ msg: "purchase Person name updated" });
+    }
+  );
+};
 exports.updatepurchasing = (req, res) => {
  
   console.log(req.body);

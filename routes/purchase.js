@@ -1,5 +1,5 @@
 var express = require("express");
-const { listpurchase, updatepurchasing } = require("../controllers/purchase");
+const { listpurchase, updatepurchasing ,updatepurchasePerson} = require("../controllers/purchase");
 const {
   queryById,
   itemById,
@@ -10,6 +10,7 @@ var router = express.Router()
 
 router.get("/listpurchase",userAuth,checkRole(['admin','superadmin','sales','purchase']), listpurchase);
 router.put("/:PurchaseId/updatePurchasingitem",userAuth,checkRole(['admin','superadmin','sales','purchase']), updatepurchasing);
+router.put("/:queryId/purchasePerson",userAuth,checkRole(['admin','superadmin','sales','purchase']), updatepurchasePerson);
 
 
 

@@ -16,7 +16,9 @@ const {
   createItem,
   createPurchase,
   createSell,
-} = require("../controllers/enquiry");
+  priorityEnquiries,
+  bulkCreateItem,
+} = require('../controllers/enquiry')
 const { userAuth, checkRole } = require("../controllers/user");
 const { validation, validationRules } = require("../helpers/enquiryValidation");
 var router = express.Router();
@@ -80,7 +82,16 @@ router.post(
   checkRole(["admin", "superadmin", "sales", "purchase"]),
   listSearch
 );
+
+// router.get(
+//   '/enquiry/list/priority',
+//   userAuth,
+//   checkRole(['admin', 'superadmin', 'sales', 'purchase']),
+//   priorityEnquiries
+// )
 // router.post('/Enquiry/by/search', listBySearch)
+
+router.post('/bulkItems', bulkCreateItem)
 
 router.param("enquiryById", EnquiryById);
 router.param("itemById", itemById);

@@ -61,6 +61,7 @@ exports.userLogin = async (userCreds, res) => {
       );
   
       let result = {
+        id : user._id,
         name: user.name,
         role: user.role,
         employeeId: user.employeeId,
@@ -230,12 +231,25 @@ exports.updateUser = (req, res) => {
    res.status(200).json({ msg: 'success',data:data })
  })
 }
+exports.updateTime = (req, res) => {
+  const time = JSON.parse(req.body).time;
+  console.log(time);
+  User.updateOne({ _id: req.user._id }, { $inc: { 'totalTime' : time} }, (error, data) => {
+   if (error) {
+     return res.status(400).json({
+       error: 'sorry updating time for this query not sucessful',
+     })
+   }
+   
+   res.status(200).json({ msg: 'success',data:data })
+ })
+}
 
 
 
 exports.userById = (req, res, next, id) => {
   console.log(id);
-  User.findById(id).exec((err, user) => {
+  User.findById(id,{password : 0, resetToken : 0}).exec((err, user) => {
     if (err || !user) {
       return res.status(400).json({
         error: 'item not found',

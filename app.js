@@ -9,9 +9,9 @@ var usersRouter = require("./routes/users");
 var Enquiry = require("./routes/enquiry");
 var Purchase = require("./routes/purchase");
 var Admin = require("./routes/admin");
-
 const passport = require("passport")
 const { mongo } = require("./configs/dbConnect");
+const bodyParser = require("body-parser");
 
 const app = express();
 
@@ -25,6 +25,7 @@ mongo();
 
 app.use(logger("dev"));
 app.use(express.json());
+app.use(bodyParser.text());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));

@@ -25,6 +25,10 @@ const UserSchema = new Schema(
         resetToken : {
             type : String,
             default: ''
+        },
+        totalTime : {
+            type : Number,
+            default : 0,
         }
     },
     { timestamps : true}

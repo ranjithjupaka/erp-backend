@@ -1,5 +1,5 @@
 var express = require('express');
-const { serializeUser, checkRole, updateUser, userById, userLoginWithToken } = require('../controllers/user');
+const { serializeUser, checkRole, updateUser, userById, userLoginWithToken, updateTime } = require('../controllers/user');
 const { listUsers,userLogin, userRegister, userAuth , forgotPassword, resetPassword} = require('../controllers/user');
 var router = express.Router();
 
@@ -20,6 +20,8 @@ router.post("/profile", async (req,res) => {
 
 router.put('/:userById/updateUser',userAuth,checkRole(['admin','superadmin']), updateUser);
 
+router.post('/:userById/updateTime', updateTime);
+
 router.put("/forgot-password",forgotPassword);
 
 router.put("/reset-password",resetPassword);
@@ -27,6 +29,6 @@ router.put("/reset-password",resetPassword);
 router.get("/users/list",userAuth,checkRole(['admin','superadmin']),listUsers);
 
 
-router.param("userById",userAuth,checkRole(['admin','superadmin']), userById);
+router.param("userById", userById);
 
 module.exports = router;

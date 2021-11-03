@@ -71,6 +71,7 @@ exports.createSell=(req,res,next)=>{
       vendor_name:"NA",
       purchase_quote_date: "",
     }
+
     const purchase=new Purchase_detail(purchaseDefault);
     purchase.save((error, data) => {
       if (error) {
@@ -116,6 +117,33 @@ exports.createItem = (req, res, next) => {
   })
 }
 
+exports.bulkCreateItem = (req, res) => {
+
+  console.log(req.body.items)
+    try {
+      Item.insertMany(req.body.items)
+      res.status(200).json({msg:'success'})
+    } catch (error) {
+      res.status(400).json({error:error})
+    }
+    
+ 
+  
+  
+  // const item = new Item(req.body.item)
+  // item.save((error, data) => {
+  //   if (error) {
+  //     return res.status(400).json({
+  //       error: error,
+  //     })
+  //   }
+  //   res.status(200).json({data:data})
+    // req.itemId = data._id
+    // // console.log(req.itemId);
+    // next()
+  // })
+}
+
 exports.createEnquiry = (req, res) => {
   
   const enquiry = new Enquiry({
@@ -126,6 +154,7 @@ exports.createEnquiry = (req, res) => {
       client_name: req.body.client_name,
       client_no: req.body.client_no,
       client_rfqno: req.body.client_rfqno,
+      sell_person : req.body.sell_person,
       priority:req.body.priority,
       items:[req.itemId]
   })
@@ -184,6 +213,40 @@ exports.listEnquiries = (req, res) => {
     })
 }
 
+// exports.priorityEnquiries = (req,res) => {
+//    let sortBy = req.query.sort ? req.query.sort : 'unique_id'
+//    let order = req.query.order ? parseInt(req.query.order) : 1
+//    const priorities = []
+
+//    if (req.query.top === 'true') {
+//      priorities.push({ priority: 'Top' })
+//    } 
+//    if (req.query.normal === 'true') {
+//      priorities.push({ priority: 'Normal' })
+//    } 
+//    if (req.query.urgent === 'true') {
+//      priorities.push({ priority: 'Urgent' })
+//    }
+//  console.log(req.query.top, req.query.normal,priorities)
+//    Enquiry.find({$and:priorities})
+//      .sort([[sortBy, order]])
+//      .populate({
+//        path: 'items',
+//        populate: {
+//          path: 'purchase_refId',
+//        },
+//      })
+//      .exec((err, queries) => {
+//        if (err) {
+//          console.log(err)
+//          return res.status(400).json({
+//            error: err,
+//          })
+//        }
+
+//        res.json(queries)
+//      })
+// }
 
 exports.addItem = (req,res) => {
    const enquiry = req.enquiry ;

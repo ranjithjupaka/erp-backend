@@ -37,6 +37,10 @@ const ItemSchema = new mongoose.Schema(
       type:String,
       default:""
     },
+    purchase_added : {
+      type : Boolean,
+      default : false
+    },
     updated: Date,
   },
   { timestamps: true }
