@@ -4,6 +4,21 @@ const jwt = require("jsonwebtoken");
 const passport = require("passport");
 const dotenv = require('dotenv');
 
+
+exports.userById = (req, res, next, id) => {
+  console.log(id)
+  User.findById(id).exec((err, user) => {
+    if (err || !user) {
+      return res.status(400).json({
+        error: 'user not found',
+      })
+    }
+    req.user = user
+    console.log(user)
+    next()
+  })
+}
+
 exports.userRegister = async (userDets, res) => {
     //console.log(userDets);
     const {employeeId} =  userDets;
@@ -246,17 +261,22 @@ exports.updateTime = (req, res) => {
 }
 
 
-
-exports.userById = (req, res, next, id) => {
-  console.log(id);
-  User.findById(id,{password : 0, resetToken : 0}).exec((err, user) => {
-    if (err || !user) {
-      return res.status(400).json({
-        error: 'item not found',
-      })
+exports.assign_enquiry = (req, res) => {
+  userId = req.body.purchase_person
+  User.updateOne(
+    { _id: userId },
+    { $push: { assigned_enquires: userId } },
+    { new: true },
+    (error, data) => {
+      if (error) {
+        return res.status(400).json({
+          error: 'sorry updating Items for this order not sucessful',
+        })
+      }
+      res.status(200).json({ msg: 'success', data: data })
     }
-    req.user = user
-    console.log(user);
-    next()
-  })
+  )
 }
+
+
+

@@ -9,6 +9,7 @@ const {
   itemById,
   readEnquiry,
   updateItem,
+  updateAlternativeItem,
   removeEnquiry,
   listBySearch,
   listSearch,
@@ -18,22 +19,34 @@ const {
   createSell,
   priorityEnquiries,
   bulkCreateItem,
+  removeAlternateItem,
+  removeAlternateRef,
+  altItemById,
+  createBulkItemEnquiry,
+  bulkAddItem,
+  createBulkSell,
+  createBulkPurchase,
 } = require('../controllers/enquiry')
-const { userAuth, checkRole } = require("../controllers/user");
+const { userAuth, checkRole, userById } = require("../controllers/user");
 const { validation, validationRules } = require("../helpers/enquiryValidation");
+const { enquires_filled, pending_enquiry } = require("../middlewares/enquiry");
+const {assign_enquiry} = require("../controllers/user")
 var router = express.Router();
 
 router.post(
-  "/enquiry/create",
+  '/enquiry/:userById/create',
   userAuth,
-  checkRole(["admin", "superadmin", "sales", "purchase"]),
+  checkRole(['admin', 'superadmin', 'sales', 'purchase']),
   // validationRules(),
   // validation(),
   createSell,
   createPurchase,
   createItem,
-  createEnquiry
-);
+  createEnquiry,
+  enquires_filled,
+  pending_enquiry,
+  assign_enquiry
+)
 
 router.post(
   "/enquiry/:enquiryById/additem",
@@ -49,6 +62,12 @@ router.put(
   userAuth,
   checkRole(["admin", "superadmin", "sales", "purchase"]),
   updateItem
+);
+router.put(
+  "/enquiry/:itemById/updateAlternativeItem",
+  userAuth,
+  checkRole(["admin", "superadmin", "sales", "purchase"]),
+  updateAlternativeItem
 );
 
 router.get(
@@ -76,6 +95,10 @@ router.delete(
   checkRole(["admin", "superadmin", "sales", "purchase"]),
   removeItem
 );
+router.delete(
+  "/:altItemById/removealternateitem",
+  removeAlternateItem
+);
 router.post(
   "/enquiry/search",
   userAuth,
@@ -90,10 +113,25 @@ router.post(
 //   priorityEnquiries
 // )
 // router.post('/Enquiry/by/search', listBySearch)
+router.post(
+  '/bulkEnquiry/:userId/create',
+  userAuth,
+  checkRole(['admin', 'superadmin', 'sales', 'purchase']),
+  // validationRules(),
+  // validation(),
 
-router.post('/bulkItems', bulkCreateItem)
+  bulkCreateItem,
+  createBulkItemEnquiry,
+  enquires_filled,
+  pending_enquiry,
+  assign_enquiry
+)
+
+router.post('/enquiry/:enquiryById/bulkAdditem',createBulkSell,createBulkPurchase, bulkCreateItem, bulkAddItem)
 
 router.param("enquiryById", EnquiryById);
 router.param("itemById", itemById);
+router.param("altItemById", altItemById);
+router.param("userId", userById)
 
 module.exports = router;

@@ -45,7 +45,17 @@ exports.listpurchaseandSales = (req, res) => {
     .sort({ updatedAt: -1 })
     .populate({
       path: "items",
-      populate: ("purchase_refId sales_refId")
+      populate:[        
+        {path : 'purchase_refId'},
+        {path : 'sales_refId'},
+        {path : 'alternateItem',
+         model:'Item',
+           populate:[
+           {path:'purchase_refId'},
+           {path:'sales_refId'}
+           ]
+          }
+      ]
      })
     .exec((err, queries) => {
       console.log(queries);

@@ -7,15 +7,15 @@ const EnquirySchema = new mongoose.Schema(
     unique_id: {
       unique: true,
       type: String,
-      required:true
+      required: true,
     },
     email_time: {
       type: String,
       minlength: 17,
     },
-    priority:{
-      type:String,
-      required:true,
+    priority: {
+      type: String,
+      required: true,
     },
     client_email: {
       unique: true,
@@ -23,7 +23,7 @@ const EnquirySchema = new mongoose.Schema(
     },
     client_company: {
       type: String,
-      required:true,
+      required: true,
       minlength: 1,
     },
     client_name: {
@@ -34,18 +34,20 @@ const EnquirySchema = new mongoose.Schema(
       type: String,
       minlength: 10,
     },
-    items: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Item'}],
+    items: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Item' }],
     client_rfqno: {
       type: String,
       required: true,
     },
-    sell_person:{
-      type:String,
-      default:""
+    sales_person: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
     },
-    purchase_person:{
-      type:String,
-      default:""
+    purchase_person: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
     },
     updated: Date,
   },

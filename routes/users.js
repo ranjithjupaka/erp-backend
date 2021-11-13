@@ -26,7 +26,7 @@ router.put("/forgot-password",forgotPassword);
 
 router.put("/reset-password",resetPassword);
 
-router.get("/users/list",userAuth,checkRole(['admin','superadmin']),listUsers);
+router.get("/users/list",listUsers);
 
 
 router.param("userById", userById);

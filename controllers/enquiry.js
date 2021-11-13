@@ -29,6 +29,19 @@ exports.itemById = (req, res, next, id) => {
     next()
   })
 }
+exports.altItemById = (req, res, next, id) => {
+  console.log(id);
+  Item.findById(id).exec((err, item) => {
+    if (err || !item) {
+      return res.status(400).json({
+        error: 'item not found',
+      })
+    }
+    req.alt = item
+    console.log(item);
+    next()
+  })
+}
 
 
 exports.createSell=(req,res,next)=>{
@@ -53,6 +66,33 @@ exports.createSell=(req,res,next)=>{
     next()
   
   })
+}
+
+exports.createBulkSell=(req,res,next)=>{
+   
+   const sellDefault = [];
+   const items = req.body.items
+   for(let i in items){
+        sellDefault.push({
+          selling_type: 'NA',
+          selling_price: 0,
+          selling_discount: 0,
+          selling_gst: 0,
+          selling_total: 0,
+          status: 1,
+          comment: 'NA',
+        })
+   }
+   console.log(sellDefault);
+   try {
+     Sales_detail.insertMany(sellDefault).then((data) => {
+       req.sell_refs = data.map((sell) => sell._id)
+       console.log(req.sell_refs,'sell refs')
+       next()
+     })
+   } catch (error) {
+     res.status(400).json({ error: error })
+   } 
 }
 
   exports.createPurchase=(req,res,next)=>{
@@ -87,6 +127,35 @@ exports.createSell=(req,res,next)=>{
     })
   }
 
+  exports.createBulkPurchase = (req, res, next) => {
+    const default_refs = req.sell_refs
+    const purchaseDefault = [];
+    for(let i in default_refs){
+      purchaseDefault.push({
+        quote: 'NA',
+        purchase_type: 'NA',
+        purchase_price: 0,
+        discount: 0,
+        gst: 0,
+        total: 0,
+        availability: 'NA',
+        vendor_name: 'NA',
+        purchase_quote_date: '',
+      })
+    }
+    console.log(purchaseDefault)
+    try {
+      Purchase_detail.insertMany(purchaseDefault).then((data) => {
+        req.purchase_refs = data.map((pur) => pur._id)
+        console.log(req.purchase_refs,'purchase refs')
+        next()
+      })
+    } catch (error) {
+      res.status(400).json({ error: error })
+    } 
+
+  }
+
 
 exports.createItem = (req, res, next) => {
   console.log(req.sell_ref);
@@ -112,51 +181,51 @@ exports.createItem = (req, res, next) => {
       })
     }
     req.itemId = data._id
-    // console.log(req.itemId);
     next()
   })
 }
 
-exports.bulkCreateItem = (req, res) => {
+exports.bulkCreateItem = (req, res,next) => {
+   
+  const items = req.body.items;
+  const purchase_refs = req.purchase_refs;
+  const sell_refs = req.sell_refs;
 
-  console.log(req.body.items)
+  items.forEach((item,i) => {
+     item.purchase_refId = purchase_refs[i];
+     item.sales_refId = sell_refs[i];
+  });
+
+   console.log(items)
     try {
-      Item.insertMany(req.body.items)
-      res.status(200).json({msg:'success'})
+      Item.insertMany(items).then((data) => {
+       
+        req.itemIds = data.map((item) => item._id);
+        console.log(req.itemIds);
+        next()
+      })
+     
     } catch (error) {
       res.status(400).json({error:error})
     }
     
- 
-  
-  
-  // const item = new Item(req.body.item)
-  // item.save((error, data) => {
-  //   if (error) {
-  //     return res.status(400).json({
-  //       error: error,
-  //     })
-  //   }
-  //   res.status(200).json({data:data})
-    // req.itemId = data._id
-    // // console.log(req.itemId);
-    // next()
-  // })
 }
 
-exports.createEnquiry = (req, res) => {
-  
+exports.createEnquiry = (req, res,next) => {
+  const user = req.user;
   const enquiry = new Enquiry({
-      unique_id: req.body.unique_id,
-      email_time: req.body.email_time,
-      client_email: req.body.client_email,
-      client_company:req.body.client_company,
-      client_name: req.body.client_name,
-      client_no: req.body.client_no,
-      client_rfqno: req.body.client_rfqno,
-      sell_person : req.body.sell_person,
-      priority:req.body.priority,
-      items:[req.itemId]
+    unique_id: req.body.unique_id,
+    email_time: req.body.email_time,
+    client_email: req.body.client_email,
+    client_company: req.body.client_company,
+    client_name: req.body.client_name,
+    client_no: req.body.client_no,
+    client_rfqno: req.body.client_rfqno,
+    sell_person: req.body.sell_person,
+    priority: req.body.priority,
+    items: [req.itemId],
+    sales_person: user._id,
+    purchase_person: req.body.purchase_person,
   })
   enquiry.save((error, data) => {
     if (error) {
@@ -164,7 +233,39 @@ exports.createEnquiry = (req, res) => {
         error: error,
       })
     }
-    res.status(200).json({ msg: 'success', data: data })
+    console.log(data);
+    enquiryId = data._id
+    next()
+    // res.status(200).json({ msg: 'success', data: data })
+  })
+}
+
+exports.createBulkItemEnquiry = (req, res, next) => {
+  const user = req.user
+  const enquiry = new Enquiry({
+    unique_id: req.body.unique_id,
+    email_time: req.body.email_time,
+    client_email: req.body.client_email,
+    client_company: req.body.client_company,
+    client_name: req.body.client_name,
+    client_no: req.body.client_no,
+    client_rfqno: req.body.client_rfqno,
+    sell_person: req.body.sell_person,
+    priority: req.body.priority,
+    items: [...req.itemIds],
+    sales_person: user._id,
+    purchase_person: req.body.purchase_person,
+  })
+  enquiry.save((error, data) => {
+    if (error) {
+      return res.status(400).json({
+        error: error,
+      })
+    }
+    console.log(data)
+    enquiryId = data._id
+    next()
+    // res.status(200).json({ msg: 'success', data: data })
   })
 }
 
@@ -197,20 +298,27 @@ exports.listEnquiries = (req, res) => {
     .sort([[sortBy, order]])
     .populate({
       path: "items",
-      populate : {
-        path : 'purchase_refId'
-      }
+      populate : [
+        {path : 'purchase_refId'},
+        {path : 'alternateItem',
+         model:'Item',
+            populate:{
+            path:'purchase_refId'
+           }
+      },
+      ]
      })
-    .exec((err, queries) => {
-      if (err) {
-        console.log(err)
-        return res.status(400).json({
-          error: err,
-        })
-      }
+     .populate('sales_person')
+     .exec((err, queries) => {
+       if (err) {
+         console.log(err)
+         return res.status(400).json({
+           error: err,
+         })
+       }
 
-      res.json(queries)
-    })
+       res.json(queries)
+     })
 }
 
 // exports.priorityEnquiries = (req,res) => {
@@ -264,6 +372,80 @@ exports.addItem = (req,res) => {
      }
    )
 }
+exports.removeAlternateRef = (req,res,next) => {
+  Item.remove(
+    { _id : req.item._id },
+    { $pull: { alternateItem: req.alt._id } },
+    (err, deletedItem) => {
+      if (err) {
+        return res.status(400).json({
+          error: err,
+        })
+      }
+      next()
+    }
+  )
+}
+exports.removeAlternateItem = (req,res,next) => {
+  Purchase_detail.remove(
+    {_id : req.alt.purchase_refId},
+    (err, deletedItem) => {
+      if (err) {
+        return res.status(400).json({
+          error: err,
+        })
+      }
+    })
+  Sales_detail.remove(
+    {_id : req.alt.sales_refId},
+    (err, deletedItem) => {
+      if (err) {
+        return res.status(400).json({
+          error: err,
+        })
+      }
+    })
+  Item.remove(
+    { _id : req.alt._id },
+    (err, deletedItem) => {
+      if (err) {
+        return res.status(400).json({
+          error: err,
+        })
+      }
+    }
+  )
+  return res.status(200).json({
+    message : "Item Deleted Succesfully"
+  })
+}
+
+exports.bulkAddItem = (req, res) => {
+   const enquiry = req.enquiry
+   Enquiry.findOneAndUpdate(
+     { _id: enquiry._id },
+     { $push: { items: req.itemIds } },
+     { new: true },
+     (error, data) => {
+       if (error) {
+         return res.status(400).json({
+           error: 'sorry adding Items for this Enquiry not sucessful',
+         })
+       }
+       res.status(200).json({ msg: 'success', data: data })
+     }
+   )
+  // console.log(req.body.items)
+  // try {
+  //   Item.insertMany(req.body.items).then((data) => {
+  //     req.itemIds = data.map((item) => item._id)
+  //     console.log(req.itemIds)
+  //     res.status(200).json({ msg: 'success', data: data })
+  //   })
+  // } catch (error) {
+  //   res.status(400).json({ error: error })
+  // }
+}
 
 exports.removeItem = (req, res) => {
   let item = req.item
@@ -300,6 +482,20 @@ exports.removeItem = (req, res) => {
 exports.updateItem = (req, res) => {
  
   const item = req.item ;
+
+ Item.updateOne({ _id: item._id }, { $set: req.body }, (error, data) => {
+   if (error) {
+     return res.status(400).json({
+       error: 'sorry updating items for this query not sucessful',
+     })
+   }
+   console.log(data)
+   res.status(200).json({ msg: 'success',data:data })
+ })
+}
+exports.updateAlternativeItem = (req, res) => {
+ 
+  const item = req.body ;
 
  Item.updateOne({ _id: item._id }, { $set: req.body }, (error, data) => {
    if (error) {

@@ -28,6 +28,7 @@ const ItemSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Purchase_detail',
     },
+    alternateItem: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Purchase_detail'}],
     sales_refId: {
       type: mongoose.Schema.Types.ObjectId,
       ref:'Sales_detail',

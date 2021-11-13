@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const PurchaseSchema = new mongoose.Schema(  
+const PurchaseSchema = new mongoose.Schema(
   {
     quote: {
       type: String,
@@ -14,7 +14,6 @@ const PurchaseSchema = new mongoose.Schema(
       required: true,
     },
     discount: {
-
       type: Number,
       required: true,
     },
@@ -27,20 +26,23 @@ const PurchaseSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    estimated_delivery : {
+      type:  Date,
+    },
     vendor_email: {
       type: String,
-      default:""
+      default: "",
     },
-    vendor_mode : {
-      type : String,
-      default : "email"
+    vendor_mode: {
+      type: String,
+      default: "email",
     },
     vendor_name: {
       type: String,
     },
-    vendor_phone : {
-      type : String,
-      default : ""
+    vendor_phone: {
+      type: String,
+      default: "",
     },
     purchase_quote_date: Date,
   },
