@@ -196,7 +196,7 @@ exports.bulkCreateItem = (req, res,next) => {
      item.sales_refId = sell_refs[i];
   });
 
-   console.log(items)
+   console.log(items ,'items')
     try {
       Item.insertMany(items).then((data) => {
        

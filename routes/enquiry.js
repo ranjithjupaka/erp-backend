@@ -117,9 +117,8 @@ router.post(
   '/bulkEnquiry/:userId/create',
   userAuth,
   checkRole(['admin', 'superadmin', 'sales', 'purchase']),
-  // validationRules(),
-  // validation(),
-
+  createBulkSell,
+  createBulkPurchase,
   bulkCreateItem,
   createBulkItemEnquiry,
   enquires_filled,
