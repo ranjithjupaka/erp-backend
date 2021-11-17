@@ -29,6 +29,7 @@ exports.itemById = (req, res, next, id) => {
     next()
   })
 }
+
 exports.altItemById = (req, res, next, id) => {
   console.log(id);
   Item.findById(id).exec((err, item) => {
@@ -493,6 +494,7 @@ exports.updateItem = (req, res) => {
    res.status(200).json({ msg: 'success',data:data })
  })
 }
+
 exports.updateAlternativeItem = (req, res) => {
  
   const item = req.body ;

@@ -3,6 +3,11 @@ const { Item } = require("../models/Item");
 const { Purchase_detail } = require("../models/Purchase_detail");
 const { Sales_detail } = require("../models/Sales_detail");
 
+exports.purchaseById = (req, res, next, id) => {
+  console.log(id);
+  req.purchase_refId = id
+  next()
+}
 
 exports.createAlternateSell=(req,res,next)=>{
   const sellDefault={
@@ -42,6 +47,8 @@ exports.createAlternateSell=(req,res,next)=>{
       availability:req.body.purchaseItem.availability,
       vendor_email:req.body.purchaseItem.vendor_email,
       vendor_name:req.body.purchaseItem.vendor_name,
+      vendor_mode:req.body.purchaseItem.vendor_mode,
+      vendor_phone:req.body.purchaseItem.vendor_phone,
       purchase_quote_date:req.body.purchaseItem.purchase_quote_date,
     }
 
@@ -54,6 +61,35 @@ exports.createAlternateSell=(req,res,next)=>{
       }
       req.purchase_ref = data._id
       req.sell_ref=default_ref;
+      next()
+    
+    })
+  }
+  exports.createOptionPurchase=(req,res,next)=>{
+    console.log(req.body.purchaseItem);
+    const purchaseDefault={
+      quote:req.body.purchaseItem.quote, 
+      purchase_type:req.body.purchaseItem.purchase_type,
+      purchase_price:req.body.purchaseItem.purchase_price,
+      discount: req.body.purchaseItem.discount,
+      gst: req.body.purchaseItem.gst,
+      total: req.body.purchaseItem.total,
+      availability:req.body.purchaseItem.availability,
+      vendor_email:req.body.purchaseItem.vendor_email,
+      vendor_name:req.body.purchaseItem.vendor_name,
+      vendor_mode:req.body.purchaseItem.vendor_mode,
+      vendor_phone:req.body.purchaseItem.vendor_phone,
+      purchase_quote_date:req.body.purchaseItem.purchase_quote_date,
+    }
+
+    const purchase=new Purchase_detail(purchaseDefault);
+    purchase.save((error, data) => {
+      if (error) {
+        return res.status(400).json({
+          error: error,
+        })
+      }
+      req.purchase_ref = data._id
       next()
     
     })
@@ -105,6 +141,21 @@ exports.addAlternateItem=(req,res,next)=>{
    )
 }
 
+exports.addOptionItems=(req,res)=>{
+  Item.findOneAndUpdate(
+    { _id: req.body.itemId },
+    { $push: { optionsItem: req.purchase_ref } },
+    { new: true },
+    (error, data) => {
+      if (error) {
+        return res.status(400).json({
+          error: 'sorry updating Items for this order not sucessful',
+        })
+      }
+      res.status(200).json({ msg: 'success', data: data })
+    }
+  )
+}
 
   exports.addAlternativePurchaseItem=(req,res,next)=>{
     const purchaseDefault={
@@ -165,10 +216,9 @@ exports.updatepurchasePerson = (req, res) => {
 };
 exports.updatepurchasing = (req, res) => {
  
-  console.log(req.body);
-  console.log(req.body._id);
+  req.body._id = req.purchase_refId
   Purchase_detail.findOneAndUpdate(
-    { _id: req.body._id},
+    { _id: req.purchase_refId},
     {
       $set: req.body,
     },
@@ -197,6 +247,8 @@ exports.listpurchase = (req, res) => {
             path:'purchase_refId'
            }
       },
+      {path : 'optionsItem',
+         model:'Purchase_detail',}
       ]
     })
     .exec((err, queries) => {
@@ -211,3 +263,18 @@ exports.listpurchase = (req, res) => {
       res.json(queries);
     });
 };
+
+exports.removeOption = (req,res) => {
+  Purchase_detail.remove(
+    {_id : req.purchase_refId},
+    (err, deletedItem) => {
+      if (err) {
+        return res.status(400).json({
+          error: err,
+        })
+      }
+    })
+    return res.status(200).json({
+      message : "Item Deleted Succesfully"
+    })
+}

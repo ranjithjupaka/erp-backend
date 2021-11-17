@@ -54,7 +54,9 @@ exports.listpurchaseandSales = (req, res) => {
            {path:'purchase_refId'},
            {path:'sales_refId'}
            ]
-          }
+          },
+          {path : 'optionsItem',
+         model:'Purchase_detail',}
       ]
      })
     .exec((err, queries) => {

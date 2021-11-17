@@ -26,9 +26,7 @@ const PurchaseSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    estimated_delivery : {
-      type:  Date,
-    },
+    estimated_delivery :  Date,
     vendor_email: {
       type: String,
       default: "",
