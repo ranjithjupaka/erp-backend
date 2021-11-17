@@ -23,7 +23,6 @@
     "multer": "^1.4.3",
     "nodemon": "^2.0.13",
     "passport": "^0.5.0",
-    "passport-jwt": "^4.0.0",
-    "pug": "2.0.0-beta11"
+    "passport-jwt": "^4.0.0"
   }
 }
