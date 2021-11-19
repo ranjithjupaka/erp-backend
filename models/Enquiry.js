@@ -11,7 +11,7 @@ const EnquirySchema = new mongoose.Schema(
     },
     email_time: {
       type: String,
-      minlength: 17,
+      required: true,
     },
     priority: {
       type: String,
@@ -20,11 +20,11 @@ const EnquirySchema = new mongoose.Schema(
     client_email: {
       unique: true,
       type: String,
+      required: true,
     },
     client_company: {
       type: String,
       required: true,
-      minlength: 1,
     },
     client_name: {
       type: String,
@@ -32,12 +32,12 @@ const EnquirySchema = new mongoose.Schema(
     },
     client_no: {
       type: String,
-      minlength: 10,
+      required: true,
     },
     items: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Item' }],
     client_rfqno: {
       type: String,
-      required: true,
+      default:'',
     },
     sales_person: {
       type: mongoose.Schema.Types.ObjectId,
