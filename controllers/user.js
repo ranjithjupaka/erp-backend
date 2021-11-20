@@ -72,16 +72,16 @@ exports.userLogin = async (userCreds, res) => {
           employeeId: user.employeeId,
         },
         process.env.SECRET,
-        { expiresIn: "7 days" }
+        { expiresIn: "365 days" }
       );
-  
+
       let result = {
         id : user._id,
         name: user.name,
         role: user.role,
         employeeId: user.employeeId,
         token: `Bearer ${token}`,
-        expiresIn: 168,
+        expiresIn: 365,
       };
   
       return res.status(200).json({
@@ -103,7 +103,7 @@ exports.userLoginWithToken = async (userCreds, res) => {
     // console.log(userCreds);
     if (!user) {
       return res.status(404).json({
-        message: "Username is not found. Invalid login credentials.",
+        message: "Username is not found. Invalid token.",
         success: false
       });
     }
@@ -113,7 +113,7 @@ exports.userLoginWithToken = async (userCreds, res) => {
         role: user.role,
         employeeId: user.employeeId,
         token: userCreds.token,
-        expiresIn: 168,
+        expiresIn: 365,
       };
   
       return res.status(200).json({
@@ -271,9 +271,11 @@ exports.assign_enquiry = (req, res) => {
       if (error) {
         return res.status(400).json({
           error: 'sorry updating Items for this order not sucessful',
+          msg : "Failed to create.",
+        success : false,
         })
       }
-      res.status(200).json({ msg: 'success', data: data })
+      return res.status(200).json({ message: 'Item Created Successful.', data: data, success : true })
     }
   )
 }

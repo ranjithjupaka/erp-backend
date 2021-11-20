@@ -7,6 +7,8 @@ exports.enquires_filled = (req,res,next) => {
     if (err || !user) {
       return res.status(400).json({
         error: 'Updating enquires filled is failed ',
+        msg : "Failed to create.",
+        success : false,
       })
     }
     console.log("Updating enquires filled is Sucess");
@@ -21,6 +23,8 @@ exports.pending_enquiry = (req, res, next) => {
       if (err || !user) {
         return res.status(400).json({
           error: 'Updating enquires filled is failed ',
+          msg : "Failed to create.",
+        success : false,
         })
       }
       console.log('Updating enquires filled is Sucess')

@@ -24,6 +24,7 @@ exports.createAlternateSell=(req,res,next)=>{
     if (error) {
       return res.status(400).json({
         error: error,
+        success : false
       })
     }
     // purchase_ref = data._id
@@ -57,6 +58,7 @@ exports.createAlternateSell=(req,res,next)=>{
       if (error) {
         return res.status(400).json({
           error: error,
+          success : false
         })
       }
       req.purchase_ref = data._id
@@ -87,6 +89,7 @@ exports.createAlternateSell=(req,res,next)=>{
       if (error) {
         return res.status(400).json({
           error: error,
+          success : false
         })
       }
       req.purchase_ref = data._id
@@ -117,6 +120,7 @@ exports.createAlternateItem = (req, res, next) => {
     if (error) {
       return res.status(400).json({
         error: error,
+        success : false
       })
     }
     req.itemId = data._id
@@ -134,9 +138,10 @@ exports.addAlternateItem=(req,res,next)=>{
        if (error) {
          return res.status(400).json({
            error: 'sorry updating Items for this order not sucessful',
+           success : false
          })
        }
-       res.status(200).json({ msg: 'success', data: data })
+       return res.status(200).json({ message: 'Alternative Added Successfully.', data: data, success : true })
      }
    )
 }
@@ -150,9 +155,10 @@ exports.addOptionItems=(req,res)=>{
       if (error) {
         return res.status(400).json({
           error: 'sorry updating Items for this order not sucessful',
+          success : false
         })
       }
-      res.status(200).json({ msg: 'success', data: data })
+      return res.status(200).json({ message: 'Option Added Successfully.', data: data, success : true })
     }
   )
 }
@@ -164,15 +170,15 @@ exports.addOptionItems=(req,res)=>{
       brand:req.body.item.brand,
       quantity:req.body.item.quantity,
       unit: req.body.item.unit,
-      quote:"NA", 
+      quote:"", 
       purchase_type:"Same",
       purchase_price: 0,
       discount: 0,
       gst: 0,
       total: 0,
-      availability:"NA",
+      availability:"",
       // vendor_email:"NA",
-      vendor_name:"NA",
+      vendor_name:"",
       purchase_quote_date: "",
     }
 
@@ -207,10 +213,12 @@ exports.updatepurchasePerson = (req, res) => {
       if (error) {
         return res.status(400).json({
           error: "sorry updating items for thhis query not sucessful",
+          msg : "Unable to Update.",
+          success : false
         });
       }
       console.log(data);
-      res.status(200).json({ msg: "purchase Person name updated" });
+      return res.status(200).json({ message: "purchase Person name updated",success : true });
     }
   );
 };
@@ -224,12 +232,13 @@ exports.updatepurchasing = (req, res) => {
     },
     (error, data) => {
       if (error) {
-        return res.status(400).json({
-          error: "sorry updating items for thhis query not sucessful",
+        return res.status(404).json({
+          error: "sorry updating item for this query not sucessful",
+          success : false
         });
       }
       console.log(data);
-      res.status(200).json({ msg: "success" });
+      return res.status(200).json({ message: "Updated Successfully.",success : true });
     }
   );
 };
@@ -271,10 +280,13 @@ exports.removeOption = (req,res) => {
       if (err) {
         return res.status(400).json({
           error: err,
+          msg : "Failed to delete Option.",
+          success : false
         })
       }
     })
     return res.status(200).json({
-      message : "Item Deleted Succesfully"
+      message : "Item Deleted Succesfully",
+      success : true
     })
 }

@@ -10,6 +10,7 @@ var Enquiry = require("./routes/enquiry");
 var Purchase = require("./routes/purchase");
 var Admin = require("./routes/admin");
 var Client = require('./routes/client')
+var Vendor = require('./routes/vendor')
 const passport = require("passport")
 const { mongo } = require("./configs/dbConnect");
 const bodyParser = require("body-parser");
@@ -43,6 +44,7 @@ app.use("/admin/purchase", Purchase);
 app.use('/admin/admin', Admin)
 app.use('/admin', Enquiry)
 app.use('/admin', Client)
+app.use('/admin', Vendor)
 
 
 const port = process.env.PORT || 8000;

@@ -60,6 +60,8 @@ exports.createSell=(req,res,next)=>{
     if (error) {
       return res.status(400).json({
         error: error,
+        msg : "Failed to create.",
+        success : false,
       })
     }
     // purchase_ref = data._id
@@ -101,15 +103,15 @@ exports.createBulkSell=(req,res,next)=>{
     const default_ref=req.sell_ref;
     console.log(default_ref);
     const purchaseDefault={
-      quote:"NA", 
-      purchase_type:"NA",
+      quote:"", 
+      purchase_type:"",
       purchase_price: 0,
       discount: 0,
       gst: 0,
       total: 0,
-      availability:"NA",
+      availability:"",
       // vendor_email:"NA",
-      vendor_name:"NA",
+      vendor_name:"",
       purchase_quote_date: "",
     }
 
@@ -118,6 +120,8 @@ exports.createBulkSell=(req,res,next)=>{
       if (error) {
         return res.status(400).json({
           error: error,
+          msg : "Failed to create.",
+          success : false
         })
       }
       // purchase_ref = data._id
@@ -133,14 +137,14 @@ exports.createBulkSell=(req,res,next)=>{
     const purchaseDefault = [];
     for(let i in default_refs){
       purchaseDefault.push({
-        quote: 'NA',
-        purchase_type: 'NA',
+        quote: '',
+        purchase_type: '',
         purchase_price: 0,
         discount: 0,
         gst: 0,
         total: 0,
-        availability: 'NA',
-        vendor_name: 'NA',
+        availability: '',
+        vendor_name: '',
         purchase_quote_date: '',
       })
     }
@@ -179,6 +183,8 @@ exports.createItem = (req, res, next) => {
     if (error) {
       return res.status(400).json({
         error: error,
+        msg : "Failed to create.",
+        success : false,
       })
     }
     req.itemId = data._id
@@ -232,6 +238,8 @@ exports.createEnquiry = (req, res,next) => {
     if (error) {
       return res.status(400).json({
         error: error,
+        msg : "Failed to create.",
+        success : false,
       })
     }
     console.log(data);
@@ -367,9 +375,11 @@ exports.addItem = (req,res) => {
        if (error) {
          return res.status(400).json({
            error: 'sorry updating Items for this order not sucessful',
+           msg : "Failed to create.",
+        success : false,
          })
        }
-       res.status(200).json({ msg: 'success', data: data })
+       return res.status(200).json({ message: 'Item Created Successfully.', data: data, success : true })
      }
    )
 }
@@ -388,36 +398,45 @@ exports.removeAlternateRef = (req,res,next) => {
   )
 }
 exports.removeAlternateItem = (req,res,next) => {
-  Purchase_detail.remove(
-    {_id : req.alt.purchase_refId},
-    (err, deletedItem) => {
-      if (err) {
-        return res.status(400).json({
-          error: err,
-        })
-      }
-    })
-  Sales_detail.remove(
-    {_id : req.alt.sales_refId},
-    (err, deletedItem) => {
-      if (err) {
-        return res.status(400).json({
-          error: err,
-        })
-      }
-    })
+  const alt = req.alt
   Item.remove(
-    { _id : req.alt._id },
+    { _id : alt._id },
     (err, deletedItem) => {
       if (err) {
         return res.status(400).json({
           error: err,
+          msg : "Failed to Delete Item.",
+        success : false
         })
       }
     }
   )
+  Purchase_detail.remove(
+    {_id : alt.purchase_refId},
+    (err, deletedItem) => {
+      if (err) {
+        return res.status(400).json({
+          error: err,
+          msg : "Failed to Delete Item.",
+        success : false
+        })
+      }
+    })
+  Sales_detail.remove(
+    {_id : alt.sales_refId},
+    (err, deletedItem) => {
+      if (err) {
+        return res.status(400).json({
+          error: err,
+          msg : "Failed to Delete Enquiry.",
+        success : false
+        })
+      }
+    })
+  
   return res.status(200).json({
-    message : "Item Deleted Succesfully"
+    message : "Item Deleted Succesfully",
+    success : true
   })
 }
 
@@ -460,6 +479,8 @@ exports.removeItem = (req, res) => {
       if (error) {
         return res.status(400).json({
           error: 'sorry removing Items for this order not sucessful',
+          msg : "Failed to delete Item.",
+          success : false,
         })
       }
     }
@@ -469,12 +490,15 @@ exports.removeItem = (req, res) => {
     if (err) {
       return res.status(400).json({
         error: err,
+        msg : "Failed to delete Item.",
+        success : false
       })
     }
 
-    res.json({
+    return res.json({
       deletedItem,
       message: 'Item deleted sucessfully',
+      success : true
     })
   })
 }
@@ -488,10 +512,12 @@ exports.updateItem = (req, res) => {
    if (error) {
      return res.status(400).json({
        error: 'sorry updating items for this query not sucessful',
+       msg : 'Failed to update Item',
+        success : false,
      })
    }
    console.log(data)
-   res.status(200).json({ msg: 'success',data:data })
+   return res.status(200).json({ message: 'Item Updated Successfully.',data:data, success : true })
  })
 }
 
@@ -503,10 +529,12 @@ exports.updateAlternativeItem = (req, res) => {
    if (error) {
      return res.status(400).json({
        error: 'sorry updating items for this query not sucessful',
+       msg : "Failed to update Alternate Item.",
+       success : false
      })
    }
    console.log(data)
-   res.status(200).json({ msg: 'success',data:data })
+   return res.status(200).json({ message: 'Item Updated Successfully.',data:data, success : true })
  })
 }
 
@@ -518,6 +546,8 @@ exports.removeEnquiry = (req, res) => {
     {
       return res.status(400).json({
         error: err,
+        msg : "Failed to Delete Enquiry.",
+        success : false
       })
     }
   });
@@ -526,12 +556,15 @@ exports.removeEnquiry = (req, res) => {
     if (err) {
       return res.status(400).json({
         error: err,
+        msg : "Failed to Delete Enquiry.",
+        success : false
       })
     }
 
-    res.json({
+    return res.json({
       deletedQuery,
       message: 'Enquiry deleted sucessfully',
+      success : true
     })
   })
 }

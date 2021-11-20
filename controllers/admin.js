@@ -31,10 +31,11 @@ exports.updateSells = (req, res) => {
       if (error) {
         return res.status(400).json({
           error: "sorry updating items for thhis query not sucessful",
+          success : false
         });
       }
       console.log(data);
-      res.status(200).json({ msg: "success" });
+      return res.status(200).json({ msg: "success" , success : true});
     }
   );
 };

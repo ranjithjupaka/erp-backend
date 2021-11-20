@@ -14,7 +14,7 @@ router.post("/login", async (req, res) => {
 
 
 
-router.post("/profile", async (req,res) => {
+router.post("/profile",userAuth,checkRole(['admin','sales','purchase','superadmin']), async (req,res) => {
   return userLoginWithToken(req.body, res);
 })
 
