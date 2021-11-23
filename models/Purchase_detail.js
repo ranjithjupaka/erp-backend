@@ -3,28 +3,22 @@ const PurchaseSchema = new mongoose.Schema(
   {
     quote: {
       type: String,
-      required: true,
     },
     purchase_type: {
       type: String,
-      required: true,
     },
     purchase_price: {
       type: Number,
-      required: true,
     },
     discount: {
       type: Number,
-      required: true,
     },
     gst: {
       type: Number,
-      required: true,
     },
     total: Number,
     availability: {
       type: String,
-      required: true,
     },
     estimated_delivery :  Date,
     vendor_email: {
