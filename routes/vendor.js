@@ -31,7 +31,7 @@ router.post(
   '/vendorList/uploadfile',
   userAuth,
   checkRole(['admin', 'superadmin', 'sales', 'purchase']),
-  upload.single('uploadfile'),
+  upload.single('file'),
   addBulkVendors
 )
 

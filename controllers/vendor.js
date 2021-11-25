@@ -75,6 +75,7 @@ exports.listVendors = (req,res) => {
 }
 
 exports.addBulkVendors = (req,res) => {
+  console.log(req.file)
   importExcelData2MongoDB(__basedir + '/uploads/' + req.file.filename)
    res.json({
      msg: 'File uploaded/import successfully!',
@@ -108,7 +109,7 @@ const  importExcelData2MongoDB = (filePath) => {
   })
 
   // -> Log Excel Data to Console
-  console.log(excelData)
+  console.log(excelData.VendorList)
 
   // Insert Json-Object to MongoDB
 

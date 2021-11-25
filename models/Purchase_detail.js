@@ -3,48 +3,49 @@ const PurchaseSchema = new mongoose.Schema(
   {
     quote: {
       type: String,
-      default : "",
+      default: '',
     },
     purchase_type: {
       type: String,
-      default : "",
+      default: '',
     },
     purchase_price: {
       type: Number,
-      default: 0,
     },
     discount: {
       type: Number,
-      default : 0,
     },
     gst: {
       type: Number,
-      default : 0,
     },
     total: Number,
     availability: {
       type: String,
     },
-    estimated_delivery :  Date,
+    estimated_delivery: Date,
     vendor_email: {
       type: String,
-      default: "",
+      default: '',
     },
     vendor_mode: {
       type: String,
-      default: "email",
+      default: 'email',
     },
     vendor_name: {
       type: String,
     },
     vendor_phone: {
       type: String,
-      default: "",
+      default: '',
+    },
+    comment : {
+      type: String,
+      default : "",
     },
     purchase_quote_date: Date,
   },
   { timestamps: true }
-);
+)
 
 const Purchase_detail = mongoose.model("Purchase_detail", PurchaseSchema);
 
