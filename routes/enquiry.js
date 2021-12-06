@@ -26,6 +26,7 @@ const {
   bulkAddItem,
   createBulkSell,
   createBulkPurchase,
+  quoteItems,
 } = require('../controllers/enquiry')
 const { userAuth, checkRole, userById } = require("../controllers/user");
 const { validation, validationRules } = require("../helpers/enquiryValidation");
@@ -62,6 +63,12 @@ router.put(
   userAuth,
   checkRole(["admin", "superadmin", "sales", "purchase"]),
   updateItem
+);
+router.put(
+  "/enquiry/quoteItems",
+  userAuth,
+  checkRole(["admin", "superadmin", "sales", "purchase"]),
+  quoteItems
 );
 router.put(
   "/enquiry/:itemById/updateAlternativeItem",

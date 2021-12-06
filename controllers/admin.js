@@ -42,7 +42,7 @@ exports.updateSells = (req, res) => {
 
 //getting all details
 exports.listpurchaseandSales = (req, res) => {
-  Enquiry.find()
+  Enquiry.find({"inRecycleBin":false})
     .sort({ updatedAt: -1 })
     .populate({
       path: "items",
@@ -50,6 +50,13 @@ exports.listpurchaseandSales = (req, res) => {
         {path : 'purchase_refId'},
         {path : 'sales_refId'},
         {path : 'alternateItem',
+         model:'Item',
+           populate:[
+           {path:'purchase_refId'},
+           {path:'sales_refId'}
+           ]
+          },
+        {path : 'optionsProduct',
          model:'Item',
            populate:[
            {path:'purchase_refId'},

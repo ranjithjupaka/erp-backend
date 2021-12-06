@@ -9,6 +9,7 @@ var usersRouter = require("./routes/users");
 var Enquiry = require("./routes/enquiry");
 var Purchase = require("./routes/purchase");
 var Admin = require("./routes/admin");
+var Recycle = require("./routes/recycle");
 var Client = require('./routes/client')
 var Vendor = require('./routes/vendor')
 const passport = require("passport")
@@ -41,6 +42,7 @@ require('./middlewares/passport')(passport);
 
 app.use("/user", usersRouter);
 app.use("/admin/purchase", Purchase);
+app.use("/admin/recycle", Recycle);
 app.use('/admin/admin', Admin)
 app.use('/admin', Enquiry)
 app.use('/admin', Client)

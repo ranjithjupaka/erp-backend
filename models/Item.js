@@ -28,6 +28,7 @@ const ItemSchema = new mongoose.Schema(
       ref: 'Purchase_detail',
     },
     alternateItem: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Purchase_detail'}],
+    optionsProduct: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Item'}],
     optionsItem: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Purchase_detail'}],
     sales_refId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -39,6 +40,10 @@ const ItemSchema = new mongoose.Schema(
       default:""
     },
     purchase_added : {
+      type : Boolean,
+      default : false
+    },
+    quoted : {
       type : Boolean,
       default : false
     },

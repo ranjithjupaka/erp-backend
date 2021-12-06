@@ -303,18 +303,27 @@ exports.listEnquiries = (req, res) => {
   let sortBy = req.query.sort ? req.query.sort : 'unique_id';
   let order = req.query.order ? parseInt(req.query.order) : 1;
 
-   Enquiry.find()
+   Enquiry.find({"inRecycleBin":false})
     .sort([[sortBy, order]])
     .populate({
       path: "items",
       populate : [
         {path : 'purchase_refId'},
+        {path : 'sales_refId'},
         {path : 'alternateItem',
          model:'Item',
-            populate:{
-            path:'purchase_refId'
-           }
-      },
+           populate:[
+           {path:'purchase_refId'},
+           {path:'sales_refId'}
+           ]
+          },
+        {path : 'optionsProduct',
+         model:'Item',
+           populate:[
+           {path:'purchase_refId'},
+           {path:'sales_refId'}
+           ]
+          },
       ]
      })
      .populate('sales_person')
@@ -520,6 +529,24 @@ exports.updateItem = (req, res) => {
    return res.status(200).json({ message: 'Item Updated Successfully.',data:data, success : true })
  })
 }
+exports.quoteItems = (req, res) => {
+ 
+  const items = req.body ;
+
+ Item.updateMany({ _id: { $in : items} }, { $set: {quoted : true} }, (error, data) => {
+   if (error) {
+     return res.status(400).json({
+       error: 'sorry updating items for this query not sucessful',
+       msg : 'Failed to Quote Items',
+        success : false,
+     })
+   }
+   console.log(data)
+   return res.status(200).json({ message: 'Items Quoted Successfully.',data:data, success : true })
+ })
+}
+
+
 
 exports.updateAlternativeItem = (req, res) => {
  

@@ -145,6 +145,22 @@ exports.addAlternateItem=(req,res,next)=>{
      }
    )
 }
+exports.addOptionsProduct=(req,res,next)=>{
+  Item.findOneAndUpdate(
+     { _id: req.body.itemId },
+     { $push: { optionsProduct: req.itemId } },
+     { new: true },
+     (error, data) => {
+       if (error) {
+         return res.status(400).json({
+           error: 'sorry updating Items for this order not sucessful',
+           success : false
+         })
+       }
+       return res.status(200).json({ message: 'Option Product Added Successfully.', data: data, success : true })
+     }
+   )
+}
 
 exports.addOptionItems=(req,res)=>{
   Item.findOneAndUpdate(
@@ -244,7 +260,7 @@ exports.updatepurchasing = (req, res) => {
 };
 
 exports.listpurchase = (req, res) => {
-  Enquiry.find()
+  Enquiry.find({"inRecycleBin":false})
     .sort({ updatedAt: -1 })
     .populate({
       path : 'items',
@@ -255,6 +271,12 @@ exports.listpurchase = (req, res) => {
             populate:{
             path:'purchase_refId'
            }
+      },
+      {path : 'optionsProduct',
+        model:'Item',
+          populate:{
+          path:'purchase_refId'
+          }
       },
       {path : 'optionsItem',
          model:'Purchase_detail',}

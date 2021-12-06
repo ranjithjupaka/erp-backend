@@ -30,6 +30,10 @@ const EnquirySchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    inRecycleBin: {
+      type: Boolean,
+      default:false,
+    },
     client_no: {
       type: String,
       required: true,

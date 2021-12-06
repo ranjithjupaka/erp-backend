@@ -8,6 +8,10 @@ const SalesSchema = new mongoose.Schema(
     selling_price: {
       type: Number,
     },
+    freight: {
+      type: Number,
+      default:0
+    },
     selling_discount: {
       type: Number,
     },
