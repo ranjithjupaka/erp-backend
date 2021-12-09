@@ -27,6 +27,7 @@ const {
   createBulkSell,
   createBulkPurchase,
   quoteItems,
+  updateItemField,
 } = require('../controllers/enquiry')
 const { userAuth, checkRole, userById } = require("../controllers/user");
 const { validation, validationRules } = require("../helpers/enquiryValidation");
@@ -63,6 +64,12 @@ router.put(
   userAuth,
   checkRole(["admin", "superadmin", "sales", "purchase"]),
   updateItem
+);
+router.put(
+  "/enquiry/:enquiryById/:itemById/updateitemfield",
+  userAuth,
+  checkRole(["admin", "superadmin", "sales", "purchase"]),
+  updateItemField
 );
 router.put(
   "/enquiry/quoteItems",

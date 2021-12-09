@@ -529,6 +529,22 @@ exports.updateItem = (req, res) => {
    return res.status(200).json({ message: 'Item Updated Successfully.',data:data, success : true })
  })
 }
+exports.updateItemField = (req, res) => {
+ 
+  const item = req.item ;
+
+ Item.updateOne({ _id: item._id }, { $set: req.body }, (error, data) => {
+   if (error) {
+     return res.status(400).json({
+       error: 'sorry updating items for this query not sucessful',
+       msg : 'Failed to update Item',
+        success : false,
+     })
+   }
+   console.log(data)
+   return res.status(200).json({ message: 'Item Updated Successfully.',data:data, success : true })
+ })
+}
 exports.quoteItems = (req, res) => {
  
   const items = req.body ;
@@ -597,14 +613,16 @@ exports.removeEnquiry = (req, res) => {
 }
 
 exports.listSearch = (req, res) => {
-  const field = req.query.field ? req.query.field:'client_email'
+  let field = req.query.field  ? req.query.field : 'client_email'
+  
+  console.log(field)
   try {
     Enquiry.aggregate([
       {
         $search: {
           autocomplete: {
             query: `${req.query.term}`,
-            path: field,
+            "path": field,
           },
         },
       },

@@ -11,11 +11,11 @@ exports.purchaseById = (req, res, next, id) => {
 
 exports.createAlternateSell=(req,res,next)=>{
   const sellDefault={
-    selling_type:"NA",
-      selling_price:0,
-      selling_discount:0,
-      selling_gst:0,
-      selling_total:0,
+    selling_type:req.body.purchaseItem.purchase_type,
+      selling_price:req.body.purchaseItem.purchase_price,
+      selling_discount:req.body.purchaseItem.discount,
+      selling_gst:req.body.purchaseItem.gst,
+      selling_total:req.body.purchaseItem.total,
       status:1, 
       comment:"NA",
   }
@@ -51,8 +51,9 @@ exports.createAlternateSell=(req,res,next)=>{
       vendor_mode:req.body.purchaseItem.vendor_mode,
       vendor_phone:req.body.purchaseItem.vendor_phone,
       purchase_quote_date:req.body.purchaseItem.purchase_quote_date,
+      comment : req.body.purchaseItem.comment
     }
-
+    console.log(purchaseDefault)
     const purchase=new Purchase_detail(purchaseDefault);
     purchase.save((error, data) => {
       if (error) {
@@ -61,6 +62,7 @@ exports.createAlternateSell=(req,res,next)=>{
           success : false
         })
       }
+      console.log(data)
       req.purchase_ref = data._id
       req.sell_ref=default_ref;
       next()
@@ -266,6 +268,7 @@ exports.listpurchase = (req, res) => {
       path : 'items',
       populate : [
         {path : 'purchase_refId'},
+        {path : 'sales_refId'},
         {path : 'alternateItem',
          model:'Item',
             populate:{

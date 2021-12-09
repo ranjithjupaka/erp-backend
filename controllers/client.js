@@ -33,6 +33,15 @@ exports.clientById = (req, res, next, id) => {
   })
 }
 
+exports.clientEmailSearch = (req, res) => {
+  const searchField=req.query.id;
+  Client.find({
+    quotation_email :{$regex:searchField,$options:'$i'}
+  }).then(data=>{
+    res.json(data)
+  })
+  }
+
 exports.generateSno = (req,res,next) => {
 
   Client.find().sort({"sno": -1 }).limit(1).exec((err,data) => {

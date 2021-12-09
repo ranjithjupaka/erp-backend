@@ -1,13 +1,20 @@
 var express = require('express')
 
 const {
- listClients, upload, addBulkClients, updateClient, clientById, deleteClient, createClient, generateSno
+ listClients, upload, addBulkClients, updateClient, clientById, deleteClient, createClient, generateSno, clientEmailSearch
 } = require('../controllers/client')
 const { userAuth, checkRole} = require('../controllers/user')
 
 
 var router = express.Router()
 
+
+router.get(
+  '/client/search/email', 
+  userAuth,
+  checkRole(['admin', 'superadmin', 'sales', 'purchase']),
+  clientEmailSearch
+);
 
 router.get(
   '/clients/list',

@@ -8,6 +8,7 @@ const EnquirySchema = new mongoose.Schema(
       unique: true,
       type: String,
       required: true,
+      trim:true
     },
     email_time: {
       type: String,
@@ -18,7 +19,6 @@ const EnquirySchema = new mongoose.Schema(
       required: true,
     },
     client_email: {
-      unique: true,
       type: String,
       required: true,
     },
@@ -51,7 +51,6 @@ const EnquirySchema = new mongoose.Schema(
     purchase_person: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
     },
     updated: Date,
   },
